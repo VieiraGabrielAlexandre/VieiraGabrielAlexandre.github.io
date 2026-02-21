@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CityScope API 🇧🇷 — Documentation</title>
+    <meta
+      name="description"
+      content="CityScope API documentation — a Go API that provides an urban snapshot of Brazilian cities using IBGE data."
+    />
+    <meta name="color-scheme" content="dark light" />
+
+    <style>
+      :root {
+        --bg: #0b0d12;
+        --bg2: #0f1320;
+        --card: rgba(255, 255, 255, 0.06);
+        --card2: rgba(255, 255, 255, 0.08);
+        --border: rgba(255, 255, 255, 0.12);
+        --text: rgba(255, 255, 255, 0.9);
+        --muted: rgba(255, 255, 255, 0.62);
+        --muted2: rgba(255, 255, 255, 0.48);
+        --shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+        --shadow2: 0 8px 26px rgba(0, 0, 0, 0.35);
+        --radius: 18px;
+        --radius2: 14px;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+          "Segoe UI Emoji";
+        --accent: #7c5cff; /* roxo moderno, combina bem com github */
+        --accent2: #31cfff; /* cyan suave para detalhes */
+        --ok: #34d399;
+        --warn: #fbbf24;
+        --bad: #fb7185;
+        --link: rgba(255, 255, 255, 0.92);
+        --kbd: rgba(255, 255, 255, 0.08);
+        --kbd-border: rgba(255, 255, 255, 0.12);
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f6f7fb;
+          --bg2: #ffffff;
+          --card: rgba(20, 24, 35, 0.04);
+          --card2: rgba(20, 24, 35, 0.06);
+          --border: rgba(20, 24, 35, 0.12);
+          --text: rgba(20, 24, 35, 0.92);
+          --muted: rgba(20, 24, 35, 0.64);
+          --muted2: rgba(20, 24, 35, 0.52);
+          --shadow: 0 16px 40px rgba(15, 20, 30, 0.12);
+          --shadow2: 0 10px 28px rgba(15, 20, 30, 0.10);
+          --link: rgba(20, 24, 35, 0.92);
+          --kbd: rgba(20, 24, 35, 0.06);
+          --kbd-border: rgba(20, 24, 35, 0.12);
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        color: var(--text);
+        background:
+          radial-gradient(900px 650px at 18% 8%, rgba(124, 92, 255, 0.35), transparent 55%),
+          radial-gradient(820px 600px at 82% 14%, rgba(49, 207, 255, 0.26), transparent 55%),
+          radial-gradient(900px 700px at 50% 110%, rgba(124, 92, 255, 0.16), transparent 50%),
+          linear-gradient(180deg, var(--bg), var(--bg2));
+        overflow-x: hidden;
+      }
+
+      a { color: var(--link); text-decoration: none; }
+      a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+      .app {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 22px 18px;
+        border-right: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent 70%);
+        backdrop-filter: blur(12px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 12px;
+        border-radius: var(--radius2);
+        background: var(--card);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow2);
+      }
+
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background:
+          radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,0.75), transparent 60%),
+          linear-gradient(135deg, var(--accent), var(--accent2));
+        box-shadow: 0 12px 26px rgba(124,92,255,0.25);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.2;
+        letter-spacing: 0.2px;
+      }
+      .brand p {
+        margin: 2px 0 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .search {
+        margin-top: 14px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .search svg { flex: 0 0 auto; opacity: .7; }
+      .search input {
+        width: 100%;
+        border: 0;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 13px;
+      }
+      .search input::placeholder { color: var(--muted2); }
+
+      .toc {
+        margin-top: 14px;
+        padding: 10px 8px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+        box-shadow: var(--shadow2);
+        max-height: calc(100vh - 180px);
+        overflow: auto;
+      }
+
+      .toc .toc-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px 10px;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+      }
+      .toc a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 12px;
+        color: var(--text);
+        opacity: 0.92;
+      }
+      .toc a:hover { background: rgba(255, 255, 255, 0.06); text-decoration: none; }
+      .toc a.active {
+        background: linear-gradient(135deg, rgba(124,92,255,0.22), rgba(49,207,255,0.14));
+        border: 1px solid rgba(255,255,255,0.10);
+      }
+      .toc .lvl-3 { padding-left: 22px; opacity: 0.86; }
+      .toc .lvl-4 { padding-left: 34px; opacity: 0.82; }
+
+      .toc .tag {
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05);
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* Main */
+      .main {
+        padding: 30px 26px 60px;
+      }
+
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+
+      .hero {
+        padding: 22px 22px;
+        border-radius: calc(var(--radius) + 6px);
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+        box-shadow: var(--shadow);
+      }
+
+      .hero-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .hero h2 {
+        margin: 0;
+        font-size: 28px;
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+      }
+
+      .hero .subtitle {
+        margin: 10px 0 0 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+        max-width: 68ch;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.06);
+        color: var(--text);
+        font-size: 13px;
+        box-shadow: var(--shadow2);
+        text-decoration: none;
+      }
+      .btn:hover { text-decoration: none; background: rgba(255,255,255,0.09); }
+      .btn.primary {
+        border: 1px solid rgba(255,255,255,0.18);
+        background: linear-gradient(135deg, rgba(124,92,255,0.58), rgba(49,207,255,0.32));
+      }
+      .btn svg { opacity: .9; }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .card {
+        grid-column: span 6;
+        padding: 16px 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow: var(--shadow2);
+      }
+      .card h3 {
+        margin: 0 0 10px 0;
+        font-size: 13px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .card p, .card li { color: var(--text); opacity: 0.92; font-size: 14px; line-height: 1.7; }
+      .card ul { margin: 10px 0 0 18px; }
+      .card code {
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05);
+      }
+
+      .content {
+        margin-top: 18px;
+        padding: 22px 22px 8px;
+        border-radius: calc(var(--radius) + 6px);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+        box-shadow: var(--shadow);
+      }
+
+      .content h2, .content h3, .content h4 {
+        scroll-margin-top: 90px;
+      }
+
+      .content h2 {
+        margin: 28px 0 10px;
+        font-size: 22px;
+        letter-spacing: -0.2px;
+      }
+      .content h3 {
+        margin: 20px 0 10px;
+        font-size: 17px;
+        letter-spacing: -0.1px;
+      }
+      .content h4 {
+        margin: 16px 0 10px;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        text-transform: none;
+        color: var(--text);
+        opacity: 0.95;
+      }
+
+      .content p {
+        margin: 10px 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+
+      .content ul {
+        margin: 10px 0 14px 20px;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 15px;
+      }
+
+      .content hr {
+        border: 0;
+        height: 1px;
+        background: var(--border);
+        margin: 22px 0;
+      }
+
+      .note {
+        margin: 14px 0;
+        padding: 12px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05);
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .note strong { color: var(--text); }
+      .note.ok { border-color: rgba(52,211,153,0.35); background: rgba(52,211,153,0.10); }
+      .note.warn { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.10); }
+      .note.bad { border-color: rgba(251,113,133,0.35); background: rgba(251,113,133,0.10); }
+
+      pre {
+        margin: 12px 0 16px;
+        padding: 14px 14px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.35);
+        overflow: auto;
+        box-shadow: var(--shadow2);
+      }
+      code, pre code {
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.92);
+      }
+      @media (prefers-color-scheme: light) {
+        pre { background: rgba(20, 24, 35, 0.05); }
+        code, pre code { color: rgba(20,24,35,0.92); }
+      }
+
+      .inline-code {
+        font-family: var(--mono);
+        font-size: 13px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.05);
+        color: var(--text);
+      }
+
+      .anchor {
+        opacity: 0.0;
+        margin-left: 8px;
+        font-size: 0.9em;
+        color: var(--muted2);
+      }
+      .content h2:hover .anchor,
+      .content h3:hover .anchor,
+      .content h4:hover .anchor { opacity: 1.0; }
+
+      .footer {
+        margin-top: 16px;
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+        color: var(--muted);
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .kbd {
+        display: inline-flex;
+        align-items: center;
+        padding: 1px 8px;
+        border-radius: 10px;
+        border: 1px solid var(--kbd-border);
+        background: var(--kbd);
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* Responsive */
+      @media (max-width: 980px) {
+        .app { grid-template-columns: 1fr; }
+        .sidebar {
+          position: relative;
+          height: auto;
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .toc { max-height: 260px; }
+        .main { padding: 18px 16px 44px; }
+        .card { grid-column: span 12; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <h1>CityScope API 🇧🇷</h1>
+            <p>Documentation</p>
+          </div>
+        </div>
+
+        <div class="search" title="Filtrar seções (atalho: /)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M10.5 18.5a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"
+              stroke="currentColor"
+              stroke-width="2"
+              opacity="0.8"
+            />
+            <path
+              d="M16.5 16.5 21 21"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              opacity="0.8"
+            />
+          </svg>
+          <input id="tocFilter" type="text" placeholder="Buscar seção…" autocomplete="off" />
+        </div>
+
+        <nav class="toc" aria-label="Navegação">
+          <div class="toc-title">
+            <span>Conteúdo</span>
+            <span class="kbd">/</span>
+          </div>
+          <div id="toc"></div>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="container">
+          <section class="hero">
+            <div class="hero-top">
+              <div>
+                <h2>CityScope API 🇧🇷</h2>
+                <p class="subtitle">
+                  A <strong>Go</strong> API that provides an <em>urban snapshot</em> of Brazilian cities using official IBGE
+                  data — turning complex SIDRA models into a simple-to-consume API for apps, dashboards, chatbots, and
+                  automation.
+                </p>
+              </div>
+
+              <div class="hero-actions">
+                <a class="btn primary" href="#running-locally" title="Começar rápido">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M8 5v14l11-7L8 5Z" fill="currentColor" opacity="0.9" />
+                  </svg>
+                  Quickstart
+                </a>
+                <a class="btn" href="#api-documentation" title="Docs da API">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 6a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V6Z" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+                    <path d="M7 3v18" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+                  </svg>
+                  Swagger
+                </a>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="card">
+                <h3>Features</h3>
+                <ul>
+                  <li><strong>Official Localities</strong>: states and municipalities by state.</li>
+                  <li><strong>City Snapshot</strong>: standardized snapshot by IBGE ID.</li>
+                  <li><strong>Population Data</strong>: official population estimate (SIDRA Aggregates).</li>
+                  <li><strong>Urban Indicators</strong>: metrics via Topic 4714.</li>
+                  <li><strong>OpenAPI/Swagger</strong>: interactive docs.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Built-in</h3>
+                <ul>
+                  <li><strong>Security</strong>: Bearer Token on <code>/v1/*</code>.</li>
+                  <li><strong>Observability</strong>: structured logs + Request ID.</li>
+                  <li><strong>Config</strong>: <span class="inline-code">.env</span> with cache TTL and IBGE timeout.</li>
+                  <li><strong>Cache</strong>: in-memory TTL for IBGE calls.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <article class="content" id="doc">
+            <!-- ===== Converted Markdown → HTML (structured) ===== -->
+
+            <h2 id="features">✨ Features <a class="anchor" href="#features">#</a></h2>
+            <p>Currently, CityScope provides:</p>
+            <ul>
+              <li><strong>Official Localities</strong>: List Brazilian states and municipalities by state.</li>
+              <li><strong>City Snapshot</strong>: Get a standardized snapshot of a city by its IBGE ID.</li>
+              <li><strong>Population Data</strong>: Official estimated population (IBGE – SIDRA Agregados).</li>
+              <li><strong>Urban Indicators</strong>: Access to various urban metrics (Topic 4714).</li>
+              <li><strong>OpenAPI/Swagger</strong>: Built-in interactive documentation.</li>
+              <li><strong>Security</strong>: Protected endpoints using Bearer Token authentication.</li>
+              <li><strong>Observability</strong>: Structured logging and Request ID tracking.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="api-documentation">🚀 API Documentation <a class="anchor" href="#api-documentation">#</a></h2>
+            <p>The API includes automatic documentation via Swagger UI.</p>
+            <ul>
+              <li><strong>Swagger UI</strong>: <span class="inline-code">http://localhost:&lt;PORT&gt;/docs</span></li>
+              <li><strong>OpenAPI Spec</strong>: <span class="inline-code">http://localhost:&lt;PORT&gt;/openapi.json</span></li>
+            </ul>
+
+            <hr />
+
+            <h2 id="authentication">🔐 Authentication <a class="anchor" href="#authentication">#</a></h2>
+            <p>All <span class="inline-code">/v1/*</span> endpoints require a <strong>Bearer Token</strong>.</p>
+
+            <h3 id="auth-header">Header <a class="anchor" href="#auth-header">#</a></h3>
+            <pre><code>Authorization: Bearer YOUR_TOKEN</code></pre>
+
+            <p>The token is defined in the <span class="inline-code">.env</span> file via the <span class="inline-code">API_TOKEN</span> variable.</p>
+
+            <hr />
+
+            <h2 id="sample-response">📊 Sample Response <a class="anchor" href="#sample-response">#</a></h2>
+            <h3 id="sample-endpoint">GET /v1/cities/3550308 (São Paulo) <a class="anchor" href="#sample-endpoint">#</a></h3>
+            <pre><code>{
+  "data": {
+    "ibge_id": 3550308,
+    "name": "São Paulo",
+    "state": {
+      "id": 35,
+      "name": "São Paulo",
+      "sigla": "SP"
+    },
+    "population_estimate": {
+      "year": 2024,
+      "value": 12345678
+    },
+    "indicators": {
+      "area_km2": 1521.11,
+      "demographic_density": 7638.12
+    }
+  }
+}</code></pre>
+
+            <hr />
+
+            <h2 id="error-handling">⚠️ Error Handling <a class="anchor" href="#error-handling">#</a></h2>
+            <p>The API returns standardized JSON errors for all failed requests, including a <span class="inline-code">request_id</span> for troubleshooting.</p>
+
+            <pre><code>{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "invalid token",
+    "request_id": "f1a2b3c4d5e6f7g8"
+  }
+}</code></pre>
+
+            <p>Common error codes: <span class="inline-code">BAD_REQUEST</span>, <span class="inline-code">UNAUTHORIZED</span>, <span class="inline-code">NOT_FOUND</span>, <span class="inline-code">BAD_GATEWAY</span>.</p>
+
+            <hr />
+
+            <h2 id="configuration">⚙️ Configuration <a class="anchor" href="#configuration">#</a></h2>
+            <p>Create a <span class="inline-code">.env</span> file in the root directory:</p>
+
+            <pre><code>PORT=8080
+API_TOKEN=changeme-super-secret
+IBGE_BASE_URL=https://servicodados.ibge.gov.br/api
+IBGE_TIMEOUT_SECONDS=12
+IBGE_CACHE_TTL_SECONDS=3600</code></pre>
+
+            <div class="note warn">
+              <strong>Dica:</strong> mantenha <span class="inline-code">API_TOKEN</span> fora do README público em produção. Use secrets no CI/CD e
+              um valor forte no deploy real.
+            </div>
+
+            <hr />
+
+            <h2 id="running-locally">▶️ Running Locally <a class="anchor" href="#running-locally">#</a></h2>
+            <ol style="color: var(--muted); font-size: 15px; line-height: 1.8; margin: 10px 0 14px 18px;">
+              <li>Install Go 1.26+</li>
+              <li>Clone the repository</li>
+              <li>Run the application:</li>
+            </ol>
+
+            <pre><code>go run ./cmd/api</code></pre>
+
+            <p>The server will start at <span class="inline-code">http://localhost:8080</span>.</p>
+
+            <hr />
+
+            <h2 id="testing">🔎 Testing <a class="anchor" href="#testing">#</a></h2>
+
+            <h3 id="healthcheck">Healthcheck (Public) <a class="anchor" href="#healthcheck">#</a></h3>
+            <pre><code>curl http://localhost:8080/health</code></pre>
+
+            <h3 id="list-states">List States (Protected) <a class="anchor" href="#list-states">#</a></h3>
+            <pre><code>curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/v1/locations/states</code></pre>
+
+            <h3 id="search-municipalities">Search Municipalities (Protected) <a class="anchor" href="#search-municipalities">#</a></h3>
+            <pre><code>curl -H "Authorization: Bearer $TOKEN" "http://localhost:8080/v1/locations/municipalities?state=SP&amp;q=camp"</code></pre>
+
+            <hr />
+
+            <h2 id="project-structure">🏗️ Project Structure <a class="anchor" href="#project-structure">#</a></h2>
+            <ul>
+              <li><span class="inline-code">cmd/api</span> → Entry point (main).</li>
+              <li><span class="inline-code">internal/config</span> → Environment variable configuration.</li>
+              <li><span class="inline-code">internal/contextutil</span> → Request ID and Context helpers.</li>
+              <li><span class="inline-code">internal/handlers</span> → HTTP handlers and JSON contracts.</li>
+              <li><span class="inline-code">internal/httpserver</span> → Router, Middlewares (Auth, Logging, RequestID), and OpenAPI docs.</li>
+              <li><span class="inline-code">internal/ibge</span> → IBGE API Client and data mapping.</li>
+              <li><span class="inline-code">internal/cache</span> → Simple in-memory TTL cache.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="observability">📊 Observability <a class="anchor" href="#observability">#</a></h2>
+            <p>The project uses structured logging (<span class="inline-code">log/slog</span>) and Request ID tracking to monitor API health and IBGE integration performance.</p>
+
+            <h3 id="example-log">Example Log <a class="anchor" href="#example-log">#</a></h3>
+            <pre><code>2026-02-21T12:05:00Z INFO request method=GET path=/v1/cities/3550308 status=200 latency=150ms request_id=f1a2b3c4
+2026-02-21T12:05:00Z INFO ibge call url=https://... status=200 latency=120ms request_id=f1a2b3c4</code></pre>
+
+            <hr />
+
+            <h2 id="license">License <a class="anchor" href="#license">#</a></h2>
+            <p>MIT</p>
+          </article>
+
+          <div class="footer">
+            <div>
+              <strong style="color: var(--text)">CityScope API</strong>
+              <span style="opacity:.7">·</span>
+              <span>Docs</span>
+              <span style="opacity:.7">·</span>
+              <span>Made for fast navigation &amp; easy scaling</span>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span class="kbd">/</span> <span style="color: var(--muted)">Search</span>
+              <span class="kbd">↑</span><span class="kbd">↓</span> <span style="color: var(--muted)">Navigate</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Build a TOC from headings (h2-h4) inside .content
+      const content = document.getElementById("doc");
+      const tocEl = document.getElementById("toc");
+      const filterEl = document.getElementById("tocFilter");
+
+      function buildTOC() {
+        const headings = [...content.querySelectorAll("h2[id], h3[id], h4[id]")];
+
+        tocEl.innerHTML = "";
+        const items = headings.map((h) => {
+          const level = h.tagName.toLowerCase(); // h2/h3/h4
+          const a = document.createElement("a");
+          a.href = "#" + h.id;
+
+          const title = document.createElement("span");
+          title.textContent = h.textContent.replace("#", "").trim();
+
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = level.toUpperCase();
+
+          a.appendChild(title);
+          a.appendChild(tag);
+
+          a.dataset.title = title.textContent.toLowerCase();
+          a.classList.add(level === "h3" ? "lvl-3" : level === "h4" ? "lvl-4" : "lvl-2");
+
+          tocEl.appendChild(a);
+          return a;
+        });
+
+        // Active section tracking
+        const obs = new IntersectionObserver(
+          (entries) => {
+            // choose the entry most in view
+            const visible = entries
+              .filter((e) => e.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+            if (!visible) return;
+
+            const id = visible.target.id;
+            items.forEach((x) => x.classList.toggle("active", x.getAttribute("href") === "#" + id));
+          },
+          { rootMargin: "-20% 0px -70% 0px", threshold: [0.1, 0.2, 0.35, 0.5, 0.75] }
+        );
+
+        headings.forEach((h) => obs.observe(h));
+
+        // Keyboard shortcut "/" focuses search
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "/" && document.activeElement !== filterEl) {
+            e.preventDefault();
+            filterEl.focus();
+          }
+          if (e.key === "Escape" && document.activeElement === filterEl) {
+            filterEl.value = "";
+            filterEl.blur();
+            filterTOC("");
+          }
+        });
+
+        // Arrow navigation in TOC
+        tocEl.addEventListener("keydown", (e) => {
+          const focusable = [...tocEl.querySelectorAll("a")].filter((x) => x.style.display !== "none");
+          const idx = focusable.indexOf(document.activeElement);
+
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const next = focusable[Math.min(idx + 1, focusable.length - 1)];
+            next?.focus();
+          }
+          if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const prev = focusable[Math.max(idx - 1, 0)];
+            prev?.focus();
+          }
+        });
+
+        // Make toc links focusable
+        items.forEach((a) => (a.tabIndex = 0));
+      }
+
+      function filterTOC(q) {
+        const query = q.trim().toLowerCase();
+        const links = [...tocEl.querySelectorAll("a")];
+        links.forEach((a) => {
+          const ok = !query || a.dataset.title.includes(query);
+          a.style.display = ok ? "flex" : "none";
+        });
+      }
+
+      // Ensure each heading has an anchor icon (already included, but safe)
+      function ensureAnchors() {
+        const headings = [...content.querySelectorAll("h2[id], h3[id], h4[id]")];
+        headings.forEach((h) => {
+          if (h.querySelector(".anchor")) return;
+          const anchor = document.createElement("a");
+          anchor.className = "anchor";
+          anchor.href = "#" + h.id;
+          anchor.textContent = "#";
+          h.appendChild(anchor);
+        });
+      }
+
+      filterEl.addEventListener("input", (e) => filterTOC(e.target.value));
+
+      ensureAnchors();
+      buildTOC();
+    </script>
+  </body>
+</html>
