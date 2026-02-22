@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chat Oldtimes — WebSocket Chat Demo</title>
+    <meta name="description" content="Chat Oldtimes — Minimal Go WebSocket Chat with React + Vite frontend. Real-time messaging, modern UI, and decoupled architecture." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="stylesheet" href="../docstyle/docstyle.css">
+  </head>
+
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sharedSidebar"></aside>
+
+      <main class="main">
+        <div class="container">
+          <section class="hero">
+            <div class="hero-top">
+              <div>
+                <h2>Chat Oldtimes — Old-School WebSocket Chat</h2>
+                <p class="subtitle">
+                  A minimal <strong>React + Vite</strong> frontend paired with a <strong>Go 1.26</strong> backend. Real-time WebSocket messaging, clean architecture, and decoupled design—perfect for learning concurrent patterns, message dispatch, and composable frontend-backend systems.
+                </p>
+              </div>
+
+              <div class="hero-actions">
+                <a class="btn primary" href="#quick-run" title="Quickstart">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M8 5v14l11-7L8 5Z" fill="currentColor" opacity="0.9" />
+                  </svg>
+                  Quickstart
+                </a>
+                <a class="btn" href="#websocket-api" title="API Reference">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 6a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V6Z" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+                    <path d="M7 3v18" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+                  </svg>
+                  API
+                </a>
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="card">
+                <h3>Features</h3>
+                <ul>
+                  <li><strong>Real-time Chat</strong>: WebSocket-based messaging between connected clients.</li>
+                  <li><strong>React + Vite</strong>: Modern frontend with hot module replacement.</li>
+                  <li><strong>Go 1.26 Backend</strong>: Goroutines, channels, and solid concurrency patterns.</li>
+                  <li><strong>Room Support</strong>: Join rooms, broadcast messages across clients.</li>
+                  <li><strong>WebSocket Client</strong>: Helper in <code>wsChat.ts</code>.</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Built-in</h3>
+                <ul>
+                  <li><strong>Concurrency</strong>: Go backend leverages goroutines and channels.</li>
+                  <li><strong>Decoupled</strong>: Frontend and backend are independent.</li>
+                  <li><strong>Business Logic</strong>: Backend applies rules for room and message handling.</li>
+                  <li><strong>Composable</strong>: Easy to pair with other services or extend with persistence.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <article class="content" id="doc">
+            <h2 id="features">✨ Features <a class="anchor" href="#features">#</a></h2>
+            <ul>
+              <li><strong>Real-time Chat</strong>: WebSocket-based messaging between connected clients.</li>
+              <li><strong>React + Vite Frontend</strong>: Hot module replacement, minimal setup.</li>
+              <li><strong>Go 1.26 Backend</strong>: Goroutines, channels, message dispatch.</li>
+              <li><strong>Room Support</strong>: Join rooms, broadcast messages, manage rooms.</li>
+              <li><strong>Client API</strong>: Simple helper in <code>wsChat.ts</code> to connect and send messages.</li>
+              <li><strong>Educational</strong>: Learn WebSocket patterns, Go concurrency, and React integration.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="quick-run">▶️ Quick Run (Local) <a class="anchor" href="#quick-run">#</a></h2>
+
+            <h3 id="prerequisites">Prerequisites <a class="anchor" href="#prerequisites">#</a></h3>
+            <ul>
+              <li>Go 1.26+ installed</li>
+              <li>Node.js 18+ and npm installed</li>
+              <li>Backend and frontend cloned in separate directories</li>
+            </ul>
+
+            <h3 id="backend-setup">Backend Setup <a class="anchor" href="#backend-setup">#</a></h3>
+            <pre><code># Navigate to the backend directory
+cd /path/to/chat-oldtimes-backend
+
+# Run the server
+go run .
+
+# Server listens on :8080</code></pre>
+
+            <h3 id="frontend-setup">Frontend Setup <a class="anchor" href="#frontend-setup">#</a></h3>
+            <pre><code># Navigate to the frontend directory
+cd /path/to/chat-oldtimes
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+
+# Open http://localhost:5173</code></pre>
+
+            <hr />
+
+            <h2 id="websocket-api">🔌 WebSocket API <a class="anchor" href="#websocket-api">#</a></h2>
+
+            <h3 id="connect">Connect <a class="anchor" href="#connect">#</a></h3>
+            <pre><code>ws://localhost:8080/ws?nick=YOUR_NICK</code></pre>
+            <p>Replace <span class="inline-code">YOUR_NICK</span> with your desired username.</p>
+
+            <h3 id="join-room">Join Room <a class="anchor" href="#join-room">#</a></h3>
+            <pre><code>{"type":"join","room":"geral"}</code></pre>
+
+            <h3 id="send-message">Send Message <a class="anchor" href="#send-message">#</a></h3>
+            <pre><code>{"type":"message","text":"hello everyone"}</code></pre>
+
+            <h3 id="change-nick">Change Nickname <a class="anchor" href="#change-nick">#</a></h3>
+            <pre><code>{"type":"nick","nick":"newNickname"}</code></pre>
+
+            <hr />
+
+            <h2 id="architecture">🏗️ Architecture <a class="anchor" href="#architecture">#</a></h2>
+
+            <h3 id="backend-architecture">Backend (Go) <a class="anchor" href="#backend-architecture">#</a></h3>
+            <ul>
+              <li><strong>Message Types</strong>: Defines protocol messages (join, message, nick, etc.).</li>
+              <li><strong>Room Manager</strong>: Manages active rooms and client connections.</li>
+              <li><strong>Goroutines & Channels</strong>: Concurrent message dispatch and client handling.</li>
+              <li><strong>Broadcasting</strong>: Sends messages to all clients in a room.</li>
+            </ul>
+
+            <h3 id="frontend-architecture">Frontend (React + Vite) <a class="anchor" href="#frontend-architecture">#</a></h3>
+            <ul>
+              <li><strong>wsChat.ts</strong>: WebSocket client helper with connect/send/disconnect.</li>
+              <li><strong>App.tsx</strong>: Main UI component with room and message state.</li>
+              <li><strong>Styles</strong>: Clean, minimal dark theme in CSS.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="why-it-matters">⚡ Why It Matters <a class="anchor" href="#why-it-matters">#</a></h2>
+            <ul>
+              <li><strong>Educational Value</strong>: Learn WebSocket mechanics on client and server.</li>
+              <li><strong>Practical Patterns</strong>: Go concurrency with goroutines/channels, React hooks.</li>
+              <li><strong>Decoupled Architecture</strong>: Frontend is independent—pair with other WebSocket servers.</li>
+              <li><strong>Lightweight</strong>: Fast to spin up, great for prototypes and learning.</li>
+              <li><strong>Real-time Foundation</strong>: Base for chat, notifications, collaborative tools.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="relevant-files">📁 Relevant Files <a class="anchor" href="#relevant-files">#</a></h2>
+
+            <h3 id="frontend-files">Frontend <a class="anchor" href="#frontend-files">#</a></h3>
+            <ul>
+              <li><span class="inline-code">main.tsx</span> → React entry point.</li>
+              <li><span class="inline-code">App.tsx</span> → Main UI component with state management.</li>
+              <li><span class="inline-code">wsChat.ts</span> → WebSocket client helper.</li>
+              <li><span class="inline-code">index.css</span> → Global styles.</li>
+              <li><span class="inline-code">App.css</span> → Component-specific styles.</li>
+              <li><span class="inline-code">vite.config.ts</span> → Vite configuration.</li>
+            </ul>
+
+            <h3 id="backend-files">Backend <a class="anchor" href="#backend-files">#</a></h3>
+            <ul>
+              <li><span class="inline-code">main.go</span> → Entry point and HTTP server setup.</li>
+              <li><span class="inline-code">handler.go</span> → WebSocket upgrade and connection handler.</li>
+              <li><span class="inline-code">room.go</span> → Room logic and client management.</li>
+              <li><span class="inline-code">message.go</span> → Message types and serialization.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="example-flow">🔄 Example Flow <a class="anchor" href="#example-flow">#</a></h2>
+            <ol style="color: var(--muted); font-size: 15px; line-height: 1.8; margin: 10px 0 14px 18px;">
+              <li><strong>Client connects:</strong> <code>ws://localhost:8080/ws?nick=Alice</code></li>
+              <li><strong>Backend creates connection:</strong> Goroutine spawns for this client.</li>
+              <li><strong>Client joins room:</strong> Sends <code>{"type":"join","room":"geral"}</code></li>
+              <li><strong>Backend adds to room:</strong> Notifies other clients in room.</li>
+              <li><strong>Client sends message:</strong> <code>{"type":"message","text":"Hey!"}</code></li>
+              <li><strong>Backend broadcasts:</strong> Delivers message to all clients in room.</li>
+              <li><strong>UI updates:</strong> React state updates, message appears in chat.</li>
+            </ol>
+
+            <hr />
+
+            <h2 id="extending">🚀 Extending <a class="anchor" href="#extending">#</a></h2>
+            <ul>
+              <li><strong>Database Persistence</strong>: Store messages in PostgreSQL or MongoDB.</li>
+              <li><strong>Authentication</strong>: Add JWT tokens, user accounts, roles.</li>
+              <li><strong>Media Support</strong>: Add file upload and image sharing.</li>
+              <li><strong>Typing Indicators</strong>: Show when users are typing.</li>
+              <li><strong>Read Receipts</strong>: Track message delivery status.</li>
+              <li><strong>Direct Messages</strong>: Extend to 1-on-1 conversations.</li>
+            </ul>
+
+            <hr />
+
+            <h2 id="troubleshooting">🔧 Troubleshooting <a class="anchor" href="#troubleshooting">#</a></h2>
+
+            <h3 id="connection-refused">Connection Refused <a class="anchor" href="#connection-refused">#</a></h3>
+            <div class="note warn">
+              <strong>Issue:</strong> Frontend cannot connect to backend.
+              <br/><strong>Solution:</strong> Ensure backend is running on <code>:8080</code>. Check firewall and CORS settings. Try <code>curl ws://localhost:8080/ws</code> from terminal.
+            </div>
+
+            <h3 id="hot-reload-issues">Hot Reload Not Working <a class="anchor" href="#hot-reload-issues">#</a></h3>
+            <div class="note warn">
+              <strong>Issue:</strong> Vite hot reload not triggering.
+              <br/><strong>Solution:</strong> Restart <code>npm run dev</code>. Check that file watchers are enabled. On Linux, may need to increase file descriptor limits.
+            </div>
+
+            <h3 id="websocket-close">WebSocket Closes Immediately <a class="anchor" href="#websocket-close">#</a></h3>
+            <div class="note warn">
+              <strong>Issue:</strong> Connection established then closes.
+              <br/><strong>Solution:</strong> Check backend logs for errors. Verify message format is JSON. Ensure server-side error handling logs the issue.
+            </div>
+
+            <hr />
+
+            <h2 id="license">📝 License <a class="anchor" href="#license">#</a></h2>
+            <p>MIT</p>
+          </article>
+
+          <div class="footer">
+            <div>
+              <strong style="color: var(--text)">Chat Oldtimes</strong>
+              <span style="opacity:.7">·</span>
+              <span>Docs</span>
+              <span style="opacity:.7">·</span>
+              <span>Made for fast navigation & easy scaling</span>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span class="kbd">/</span> <span style="color: var(--muted)">Search</span>
+              <span class="kbd">↑</span><span class="kbd">↓</span> <span style="color: var(--muted)">Navigate</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const SIDEBAR_HTML = `
+<div class="brand">
+  <div class="logo" aria-hidden="true"></div>
+  <div>
+    <h1 data-project-title>Project</h1>
+    <p data-project-subtitle>Documentation</p>
+  </div>
+</div>
+
+<div class="projects-dropdown">
+  <button class="projects-toggle" id="projectsToggle" title="Navigate projects">
+    <span style="display: flex; align-items: center; gap: 8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="2" opacity="0.9"/>
+        <path d="M4 10h16" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+      </svg>
+      <span>My Projects</span>
+    </span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    </svg>
+  </button>
+
+  <nav class="projects-menu" id="projectsMenu" aria-label="Projects">
+    <a href="https://vieiragabriel.com.br/cityscope/" data-project-link="cityscope">
+      <div class="project-icon">🌆</div>
+      <div class="project-item-title">
+        <strong>CityScope API</strong>
+        <span>Urban Data API</span>
+      </div>
+    </a>
+    <a href="https://vieiragabriel.com.br/chatoldtimes/" data-project-link="chatoldtimes">
+      <div class="project-icon">💬</div>
+      <div class="project-item-title">
+        <strong>Chat Oldtimes</strong>
+        <span>WebSocket Chat Demo</span>
+      </div>
+    </a>
+  </nav>
+</div>
+
+<div class="search" title="Filter sections (/)">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M10.5 18.5a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" stroke="currentColor" stroke-width="2" opacity="0.8" />
+    <path d="M16.5 16.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.8" />
+  </svg>
+  <input id="tocFilter" type="text" placeholder="Search section…" autocomplete="off" />
+</div>
+
+<nav class="toc" aria-label="Navigation">
+  <div class="toc-title">
+    <span>Contents</span>
+    <span class="kbd">/</span>
+  </div>
+  <div id="toc"></div>
+</nav>
+`;
+
+      async function loadSharedSidebar() {
+        const target = document.getElementById("sharedSidebar");
+        if (!target) return;
+
+        const useInline = window.location.protocol === "file:";
+        if (useInline) {
+          target.innerHTML = SIDEBAR_HTML;
+          hydrateSidebar();
+          return;
+        }
+
+        try {
+          const res = await fetch("../docstyle/sidebar.html", { cache: "no-cache" });
+          if (!res.ok) throw new Error("sidebar fetch failed");
+          target.innerHTML = await res.text();
+        } catch {
+          target.innerHTML = SIDEBAR_HTML;
+        }
+
+        hydrateSidebar();
+      }
+
+      function hydrateSidebar() {
+        const target = document.getElementById("sharedSidebar");
+        if (!target) return;
+
+        const title = target.querySelector("[data-project-title]");
+        const subtitle = target.querySelector("[data-project-subtitle]");
+        if (title) title.textContent = "Chat Oldtimes";
+        if (subtitle) subtitle.textContent = "Docs & API";
+
+        const active = target.querySelector("[data-project-link=\"chatoldtimes\"]");
+        active?.classList.add("active");
+
+        setupSidebarInteractions();
+      }
+
+      function setupSidebarInteractions() {
+        const projectsToggle = document.getElementById("projectsToggle");
+        const projectsMenu = document.getElementById("projectsMenu");
+
+        projectsToggle?.addEventListener("click", () => {
+          projectsToggle.classList.toggle("open");
+          projectsMenu?.classList.toggle("open");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".projects-dropdown")) {
+            projectsToggle?.classList.remove("open");
+            projectsMenu?.classList.remove("open");
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            projectsToggle?.classList.remove("open");
+            projectsMenu?.classList.remove("open");
+          }
+        });
+
+        const content = document.getElementById("doc");
+        const tocEl = document.getElementById("toc");
+        const filterEl = document.getElementById("tocFilter");
+
+        function buildTOC() {
+          const headings = [...content.querySelectorAll("h2[id], h3[id], h4[id]")];
+
+          tocEl.innerHTML = "";
+          const items = headings.map((h) => {
+            const level = h.tagName.toLowerCase();
+            const a = document.createElement("a");
+            a.href = "#" + h.id;
+
+            const title = document.createElement("span");
+            title.textContent = h.textContent.replace("#", "").trim();
+
+            const tag = document.createElement("span");
+            tag.className = "tag";
+            tag.textContent = level.toUpperCase();
+
+            a.appendChild(title);
+            a.appendChild(tag);
+
+            a.dataset.title = title.textContent.toLowerCase();
+            a.classList.add(level === "h3" ? "lvl-3" : level === "h4" ? "lvl-4" : "lvl-2");
+
+            tocEl.appendChild(a);
+            return a;
+          });
+
+          const obs = new IntersectionObserver(
+            (entries) => {
+              const visible = entries
+                .filter((e) => e.isIntersecting)
+                .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+              if (!visible) return;
+
+              const id = visible.target.id;
+              items.forEach((x) => x.classList.toggle("active", x.getAttribute("href") === "#" + id));
+            },
+            { rootMargin: "-20% 0px -70% 0px", threshold: [0.1, 0.2, 0.35, 0.5, 0.75] }
+          );
+
+          headings.forEach((h) => obs.observe(h));
+
+          window.addEventListener("keydown", (e) => {
+            if (e.key === "/" && document.activeElement !== filterEl) {
+              e.preventDefault();
+              filterEl.focus();
+            }
+            if (e.key === "Escape" && document.activeElement === filterEl) {
+              filterEl.value = "";
+              filterEl.blur();
+              filterTOC("");
+            }
+          });
+
+          tocEl.addEventListener("keydown", (e) => {
+            const focusable = [...tocEl.querySelectorAll("a")].filter((x) => x.style.display !== "none");
+            const idx = focusable.indexOf(document.activeElement);
+
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              const next = focusable[Math.min(idx + 1, focusable.length - 1)];
+              next?.focus();
+            }
+            if (e.key === "ArrowUp") {
+              e.preventDefault();
+              const prev = focusable[Math.max(idx - 1, 0)];
+              prev?.focus();
+            }
+          });
+
+          items.forEach((a) => (a.tabIndex = 0));
+        }
+
+        function filterTOC(q) {
+          const query = q.trim().toLowerCase();
+          const links = [...tocEl.querySelectorAll("a")];
+          links.forEach((a) => {
+            const ok = !query || a.dataset.title.includes(query);
+            a.style.display = ok ? "flex" : "none";
+          });
+        }
+
+        function ensureAnchors() {
+          const headings = [...content.querySelectorAll("h2[id], h3[id], h4[id]")];
+          headings.forEach((h) => {
+            if (h.querySelector(".anchor")) return;
+            const anchor = document.createElement("a");
+            anchor.className = "anchor";
+            anchor.href = "#" + h.id;
+            anchor.textContent = "#";
+            h.appendChild(anchor);
+          });
+        }
+
+        filterEl?.addEventListener("input", (e) => filterTOC(e.target.value));
+
+        ensureAnchors();
+        buildTOC();
+      }
+
+      loadSharedSidebar();
+    </script>
+  </body>
