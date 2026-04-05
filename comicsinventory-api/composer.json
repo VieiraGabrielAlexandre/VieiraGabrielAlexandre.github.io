@@ -1,0 +1,13 @@
+{
+  "name": "gabriel/comicsinventory-api",
+  "require": {
+    "php": ">=8.1",
+    "firebase/php-jwt": "^6.10",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}

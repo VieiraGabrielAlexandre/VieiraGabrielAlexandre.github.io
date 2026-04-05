@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Música Starter — Afinador, Metrônomo, Campo Harmônico e Treino</title>
+  <meta name="description" content="Ferramentas simples para iniciantes em música: afinador, metrônomo, campo harmônico e treino de intervalos.">
+  <style>
+    /* Pequeno reset + variáveis de tema */
+    :root{
+      --bg: #0b1020;
+      --panel: #121a35;
+      --text: #e8ecff;
+      --muted: #b6c1ff;
+      --accent: #7aa2ff;
+      --accent-2:#94f7d1;
+      --danger:#ff6b6b;
+      --ok:#6bff95;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;color:var(--text);background: radial-gradient(1200px 900px at 80% -10%, #1a2455 0%, #0b1020 60%) fixed, var(--bg);font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif}
+    a{color:var(--accent)}
+    header{
+      position:sticky;top:0;z-index:10;background:linear-gradient(180deg, rgba(11,16,32,.95), rgba(11,16,32,.65) 50%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .title{display:flex;align-items:center;gap:14px}
+    .logo{
+      width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+    .subtitle{color:var(--muted);font-size:.95rem;margin-top:2px}
+    nav{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+    }
+    .tab-btn{
+      appearance:none;border:none;padding:10px 14px;border-radius:12px;cursor:pointer;
+      background:rgba(255,255,255,.04);color:var(--text);transition:.2s;
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .tab-btn[aria-selected="true"]{background:linear-gradient(135deg, rgba(122,162,255,.2), rgba(148,247,209,.2));border-color:rgba(255,255,255,.2)}
+    main{padding:22px}
+    .grid{
+      display:grid;gap:18px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card{
+      grid-column: span 12;
+      background:linear-gradient(180deg, rgba(18,26,53,.9), rgba(18,26,53,.7));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    @media (min-width: 780px){
+      .card--half{grid-column: span 6}
+      .card--third{grid-column: span 4}
+    }
+    h2{margin:.1rem 0 1rem 0}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .row > *{flex:0 0 auto}
+    .input, select{
+      background:#0f1631;border:1px solid rgba(255,255,255,.12);color:var(--text);
+      border-radius:12px;padding:10px 12px;min-width:90px
+    }
+    .btn{
+      appearance:none;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:600;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      color:#0b1020; box-shadow: var(--shadow); transition: transform .06s ease;
+    }
+    .btn:active{transform: translateY(1px) scale(.99)}
+    .btn--ghost{background:rgba(255,255,255,.04);color:var(--text);border:1px solid rgba(255,255,255,.12)}
+    .help{color:var(--muted);font-size:.9rem}
+    .muted{color:var(--muted)}
+    .kpi{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+    .kpi .pill{
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 12px;min-width:120px;text-align:center
+    }
+    .tuner-needle{
+      position:relative;height:16px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);border-radius:999px;overflow:hidden;
+    }
+    .tuner-needle .dial{
+      position:absolute;top:0;height:100%;width:2px;background:linear-gradient(180deg, var(--accent), var(--accent-2));
+      left:50%;
+      transform: translateX(-50%);
+    }
+    .ticks{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-top:6px}
+    .chord-grid{display:grid;grid-template-columns: repeat(7, 1fr);gap:8px;margin-top:10px}
+    .degree{
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;text-align:center
+    }
+    .good{color:var(--ok)} .bad{color:var(--danger)}
+    footer{padding:24px;color:var(--muted);text-align:center;font-size:.9rem}
+    .hidden{display:none !important}
+    .section{display:none}
+    .section.active{display:block}
+    .hr{height:1px;background:linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.2), rgba(255,255,255,.05));margin:14px 0}
+  </style>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="title">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1 style="margin:0">Música Starter</h1>
+          <div class="subtitle">Ferramentas simples para começar no mundo da música</div>
+        </div>
+      </div>
+      <nav aria-label="Seções">
+        <button class="tab-btn" data-target="#afinador" aria-selected="true">Afinador</button>
+        <button class="tab-btn" data-target="#metronomo">Metrônomo</button>
+        <button class="tab-btn" data-target="#harmonia">Campo Harmônico</button>
+        <button class="tab-btn" data-target="#treino">Treino de Intervalos</button>
+      <button id="btn-install" class="tab-btn" style="margin-left:auto" title="Instalar como app (PWA)">⬇️ Instalar</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Afinador -->
+    <section id="afinador" class="section active">
+      <div class="grid">
+        <div class="card">
+          <h2>🎤 Afinador (microfone)</h2>
+          <div class="row">
+            <button id="btn-start-tuner" class="btn">Ativar microfone</button>
+            <span class="help">Permita o uso do microfone. Funciona melhor em HTTPS.</span>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <label>Alvo (corda)</label>
+            <select id="target-string" class="input">
+              <option value="">Livre</option>
+              <option value="82.41">E2 (Mi grave)</option>
+              <option value="110.00">A2 (Lá)</option>
+              <option value="146.83">D3 (Ré)</option>
+              <option value="196.00">G3 (Sol)</option>
+              <option value="246.94">B3 (Si)</option>
+              <option value="329.63">E4 (Mi agudo)</option>
+            </select>
+            <button id="btn-ref" class="btn btn--ghost">Tocar Referência</button>
+            <span class="help">Dica: selecione a corda para facilitar a afinação.</span>
+          </div>
+          <div class="kpi">
+            <div class="pill"><div class="muted">Nota</div><div id="note-name" style="font-size:1.3rem">—</div></div>
+            <div class="pill"><div class="muted">Frequência</div><div id="freq" style="font-size:1.3rem">— Hz</div></div>
+            <div class="pill"><div class="muted">Desvio</div><div id="cents" style="font-size:1.3rem">— cents</div></div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="tuner-needle" aria-label="afinador - ponteiro">
+              <div id="needle" class="dial" style="left:50%"></div>
+            </div>
+            <div class="ticks"><span>-50¢</span><span>0¢</span><span>+50¢</span></div>
+          </div>
+          <div class="hr"></div>
+          <p class="help">Dica: toque uma corda solta (ex.: E, A, D, G, B, E) e tente manter o ponteiro no centro (0 cents).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrônomo -->
+    <section id="metronomo" class="section">
+      <div class="grid">
+        <div class="card card--half">
+          <h2>⏱️ Metrônomo</h2>
+          <div class="row" style="gap:16px">
+            <label>BPM
+              <input id="bpm" class="input" type="number" min="30" max="260" value="100" style="width:90px" />
+            </label>
+            <label>Preset
+              <select id="pattern" class="input">
+                <option value="rock4">Rock 4/4</option>
+                <option value="bossa">Bossa simples</option>
+                <option value="funk16">Funk 16ths</option>
+              </select>
+            </label>
+            <label>Ênfase a cada
+              <select id="accent" class="input">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4" selected>4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+              </select>
+              batidas
+            </label>
+            <button id="btn-start-met" class="btn">Iniciar</button>
+            <button id="btn-stop-met" class="btn btn--ghost">Parar</button>
+            <button id="btn-tap" class="btn btn--ghost">Tap</button>
+          </div>
+          <p class="help">Use <strong>Tap</strong> para detectar o BPM de uma música. Atalhos: <kbd>Espaço</kbd> (Tap), <kbd>S</kbd> Start/Stop.</p>
+          <div style="margin-top:10px">
+            <progress id="beat-progress" max="1" value="0" style="width:100%"></progress>
+          </div>
+        </div>
+        <div class="card card--half">
+          <h2>🧭 Como estudar com metrônomo</h2>
+          <ol class="help">
+            <li>Escolha um exercício simples (escala, batida, groove).</li>
+            <li>Comece lento (60–80 BPM) e toque limpo, sem correr.</li>
+            <li>Aumente 5 BPM quando acertar 3x seguidas.</li>
+            <li>Varie acentuação (ex.: 3 ou 4) e subdivisões (colcheia, semicolcheia).</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Harmonia -->
+    <section id="harmonia" class="section">
+      <div class="grid">
+        <div class="card">
+          <h2>🎼 Campo Harmônico</h2>
+          <div class="row">
+            <label>Tonalidade
+              <select id="key-select" class="input"></select>
+            </label>
+            <label>Modo
+              <select id="mode-select" class="input">
+                <option value="major" selected>Maior</option>
+                <option value="minor">Menor (natural)</option>
+              </select>
+            </label>
+            <button id="btn-build-harmony" class="btn">Gerar</button>
+          </div>
+          <div id="harmony-output" style="margin-top:12px">
+            <div class="muted">Escolha uma tonalidade e modo para ver os acordes diatônicos.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Treino de Intervalos -->
+    <section id="treino" class="section">
+      <div class="grid">
+        <div class="card">
+          <h2>👂 Treino de Intervalos</h2>
+          <div class="row">
+            <button id="btn-play-interval" class="btn">Tocar Intervalo</button>
+            <span class="help">Ouça e tente identificar o intervalo entre duas notas.</span>
+          </div>
+          <div id="answers" class="row" style="margin-top:12px; gap:8px; flex-wrap:wrap"></div>
+          <div class="row" style="margin-top:10px">
+            <label>Alvo (corda)</label>
+            <select id="target-string" class="input">
+              <option value="">Livre</option>
+              <option value="82.41">E2 (Mi grave)</option>
+              <option value="110.00">A2 (Lá)</option>
+              <option value="146.83">D3 (Ré)</option>
+              <option value="196.00">G3 (Sol)</option>
+              <option value="246.94">B3 (Si)</option>
+              <option value="329.63">E4 (Mi agudo)</option>
+            </select>
+            <button id="btn-ref" class="btn btn--ghost">Tocar Referência</button>
+            <span class="help">Dica: selecione a corda para facilitar a afinação.</span>
+          </div>
+          <div class="kpi">
+            <div class="pill"><div class="muted">Último</div><div id="last-result">—</div></div>
+            <div class="pill"><div class="muted">Acertos</div><div id="score">0</div></div>
+            <div class="pill"><div class="muted">Tentativas</div><div id="tries">0</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Feito com 💙 para iniciantes. Dica: pratique pouco todo dia. | Código simples em HTML, CSS e JS.
+    Desenvolvido e idealizado por Gabriel Vieira
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

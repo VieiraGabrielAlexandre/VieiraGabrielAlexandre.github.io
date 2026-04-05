@@ -1,0 +1,6 @@
+/* Estilos extras (separado para facilitar manutenção) */
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:6px 10px}
+kbd{background:#101737;border:1px solid rgba(255,255,255,.2);padding:2px 6px;border-radius:6px}
+progress{height:14px;border-radius:999px;overflow:hidden}
+progress::-webkit-progress-bar{background:rgba(255,255,255,.06)}
+progress::-webkit-progress-value{background:linear-gradient(90deg, #7aa2ff, #94f7d1)}
