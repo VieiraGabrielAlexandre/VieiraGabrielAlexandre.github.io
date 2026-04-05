@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore as Estrelas - Astronomy API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌌</text></svg>">
+</head>
+<body>
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+    <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+    </svg>
+    <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+</button>
+
+<div class="app-container">
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="stars-container"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <!-- Home Screen -->
+    <section class="home-screen" id="homeScreen">
+        <div class="container">
+            <div class="home-content">
+                <div class="hero-section">
+                    <h1 class="hero-title">
+                        <svg class="hero-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        Explore as Estrelas
+                    </h1>
+                    <p class="hero-subtitle">Descubra as maravilhas do universo com a Astronomy API</p>
+                </div>
+
+                <div class="options-grid">
+                    <div class="option-card" id="constellationChartsOption">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="option-title">Mapas Estelares</h3>
+                        <p class="option-description">Gere mapas detalhados das constelações visíveis em qualquer data e localização</p>
+                        <div class="option-features">
+                            <span class="feature-tag">88 Constelações</span>
+                            <span class="feature-tag">Múltiplos Estilos</span>
+                            <span class="feature-tag">Qualquer Data</span>
+                        </div>
+                        <button class="option-btn">
+                            Explorar Constelações
+                            <svg class="btn-arrow" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="option-card coming-soon">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                        </div>
+                        <h3 class="option-title">Fases da Lua</h3>
+                        <p class="option-description">Visualize as fases lunares e informações detalhadas sobre nosso satélite natural</p>
+                        <div class="coming-soon-badge">Em Breve</div>
+                    </div>
+
+                    <div class="option-card coming-soon">
+                        <div class="option-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/>
+                                <line x1="21" y1="12" x2="23" y2="12"/>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                            </svg>
+                        </div>
+                        <h3 class="option-title">Posições Planetárias</h3>
+                        <p class="option-description">Acompanhe as posições dos planetas e eventos astronômicos importantes</p>
+                        <div class="coming-soon-badge">Em Breve</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Constellation Charts Screen -->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">Explore as Estrelas</h4>
+                    <p class="footer-text">Powered by Astronomy API - Descubra as maravilhas do universo</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Links Úteis</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://astronomyapi.com" class="footer-link" target="_blank">Astronomy API</a></li>
+                        <li><a href="https://astronomyapi.com/docs" class="footer-link" target="_blank">Documentação</a></li>
+                        <li><a href="constellation.html" class="footer-link">Mapas Estelares</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Recursos</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">Guia de Observação</a></li>
+                        <li><a href="#" class="footer-link">Calendário Astronômico</a></li>
+                        <li><a href="#" class="footer-link">Dicas para Iniciantes</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Explore as Estrelas. Feito com ❤️ para os amantes da astronomia.</p>
+                <p>Site desenvolvido por Gabriel Vieira</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+</div>
+
+<script src="src/app.js"></script>
+</body>
+</html>

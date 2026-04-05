@@ -1,0 +1,47 @@
+
+/* === Features Carousel: consistent height across all slides ===
+   Drop this file AFTER your other CSS to enforce a fixed, responsive height.
+*/
+
+:root{
+  /* Adjust these if you want another default height */
+  --features-min-h: 220px;
+  --features-ideal-h: 52vw;   /* responsive scaling */
+  --features-max-h: 520px;
+}
+
+/* Lock the outer box height with clamp and keep images covering */
+.features-carousel{
+  height: clamp(var(--features-min-h), var(--features-ideal-h), var(--features-max-h));
+}
+
+/* Make every slide fill the same fixed height and avoid reflow when images change */
+.features-carousel .features-slide{
+  height: 100%;
+}
+
+/* Ensure the media fills without distorting (may crop edges = 'cover') */
+.features-carousel .features-slide img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Optional: different heights by breakpoint */
+@media (min-width: 992px){
+  :root{
+    --features-ideal-h: 40vw;
+    --features-max-h: 600px;
+  }
+}
+
+/* Entertainment carousel: apply same logic if needed */
+.entertainment-carousel{
+  height: clamp(200px, 50vw, 480px);
+}
+.entertainment-carousel .entertainment-slide{ height: 100%; }
+.entertainment-carousel .entertainment-slide img{
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+}

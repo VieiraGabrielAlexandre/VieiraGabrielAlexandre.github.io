@@ -1,0 +1,81 @@
+:root {
+    --bg: #0b0f14;
+    --card: #10161d;
+    --card-2: #131b24;
+    --muted: #8aa0b3;
+    --text: #eaf1f7;
+    --primary: #6bc4ff;
+    --accent: #a4ff9f;
+    --danger: #ff6b6b;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+    margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 800px at 80% -10%, #123149, transparent 40%), var(--bg);
+    color: var(--text);
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+a { color: var(--primary); text-decoration: none; }
+
+header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 18px; }
+.brand { display:flex; gap:12px; align-items:center; }
+.logo { width:40px; height:40px; border-radius:12px; background: linear-gradient(135deg, #23a6d5, #23d5ab); box-shadow: var(--shadow); }
+h1 { font-size:1.2rem; margin:0; letter-spacing:.5px; }
+.muted { color: var(--muted); font-size:.9rem; }
+
+.toolbar { display:flex; gap:8px; flex-wrap:wrap; }
+.btn { background: var(--card-2); color: var(--text); border:1px solid #223040; padding:10px 14px; border-radius:12px; cursor:pointer; transition:.15s transform,.15s background; }
+.btn:hover { transform: translateY(-1px); background:#19222d; }
+.btn.primary { background: linear-gradient(135deg, #2481c9, #23a6d5); border:none; }
+.btn.danger { background:#3a1920; border:1px solid #5b2c36; color:#ffb3bd; }
+.btn.small { padding:6px 10px; border-radius:10px; font-size:.9rem; }
+
+.pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:#0e151c; border:1px solid #233244; color:var(--muted); font-size:.9rem; }
+
+.grid { display:grid; grid-template-columns: 1.2fr .8fr; gap:16px; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+.card { background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--card);
+    border:1px solid #223040; border-radius: var(--radius); padding:16px; box-shadow: var(--shadow); }
+.card h2 { margin:0 0 12px; font-size:1.05rem; letter-spacing:.3px; color:#d6e6f3; }
+
+.row { display:flex; gap:10px; flex-wrap:wrap; }
+.field { display:flex; flex-direction:column; gap:6px; flex:1; min-width:160px; }
+label { color:#b7c6d3; font-size:.9rem; }
+input, select { background:#0f1821; color:var(--text); border:1px solid #263548; padding:10px 12px;
+    border-radius:12px; outline:none; transition: border .15s, box-shadow .15s; }
+input:focus, select:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,.15); }
+
+table { width:100%; border-collapse: collapse; }
+th, td { padding:10px 8px; border-bottom:1px solid #223040; text-align:left; }
+th { color:#9fb4c6; font-weight:600; font-size:.92rem; }
+tr:hover td { background:#0e1620; }
+.table-actions { display:flex; gap:8px; }
+.right { margin-left:auto; }
+.stack { display:flex; flex-direction:column; gap:10px; }
+
+.pagination { display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
+.pagination .btn { padding:8px 10px; }
+.spacer { flex:1; }
+
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:50; padding:20px; }
+.modal { background: var(--card); border:1px solid #223040; border-radius:16px; width:100%; max-width:560px; box-shadow: var(--shadow); }
+.modal header { padding:14px 16px; border-bottom:1px solid #223040; }
+.modal .body { padding:16px; }
+.modal .footer { padding:12px 16px; border-top:1px solid #223040; display:flex; gap:8px; justify-content:flex-end; }
+.modal.show { display:flex; }
+.modal h3 { margin:0; font-size:1rem; }
+
+.toasts { position:fixed; right:16px; bottom:16px; display:flex; flex-direction:column; gap:10px; z-index:60; }
+.toast { background:#0d1a12; border:1px solid #234933; color:#b9ffdb; padding:10px 12px; border-radius:12px; box-shadow: var(--shadow); font-size:.95rem; }
+.toast.err { background:#2a1316; border-color:#5a2a31; color:#ffd6db; }
+
+.badge { font-size:.78rem; padding:4px 8px; border-radius:999px; border:1px solid #2a3b4f; color:#b7c6d3; background:#0b1218; }
+.status-na_estante { background:#0f1b12; border-color:#1e3a25; color:#a7f3d0; }
+.status-vendido { background:#2a1516; border-color:#512427; color:#fecaca; }
+.status-desejado { background:#1f1a0e; border-color:#4a3b16; color:#fde68a; }

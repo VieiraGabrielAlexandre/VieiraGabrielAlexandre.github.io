@@ -1,0 +1,68 @@
+
+/* === Full-Bleed (Edge-to-Edge) Carousel Add-on ===
+   Usage:
+   1) Add class 'full-bleed' on the wrapper around .features-carousel
+      <section class="hero full-bleed"> ... .features-carousel ... </section>
+   2) Include this file AFTER your other CSS files.
+*/
+
+/* Prevent horizontal scrollbar when using 100vw in nested layouts */
+html, body { overflow-x: hidden; }
+
+/* Full-bleed utility that breaks out of centered containers */
+.full-bleed {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+}
+
+/* Ensure the carousel truly spans the viewport */
+.full-bleed .features-carousel {
+  width: 100vw;
+  max-width: 100vw;
+  border-radius: 0;             /* edge-to-edge corners */
+  box-shadow: none;             /* flat like most hero carousels */
+}
+
+/* Maintain a responsive, cinematic height */
+.full-bleed .features-carousel {
+  /* 16:9 look on large screens; taller on mobile for impact */
+  height: clamp(260px, 45vw, 720px);
+}
+
+/* Make slides fill the box and crop gracefully */
+.full-bleed .features-carousel .features-slide { height: 100%; }
+.full-bleed .features-carousel .features-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Controls and indicators spacing from edges for full-bleed */
+.full-bleed .features-carousel .features-control.prev { left: 24px; }
+.full-bleed .features-carousel .features-control.next { right: 24px; }
+.full-bleed .features-carousel .features-indicators { bottom: 18px; }
+
+/* Optional: darken images slightly to improve text contrast if you overlay copy */
+.full-bleed .features-carousel::after{
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.25));
+  mix-blend-mode: multiply;
+}
+
+/* If you also want the entertainment carousel full-bleed, reuse the wrapper */
+.full-bleed .entertainment-carousel{
+  width: 100vw; max-width: 100vw; border-radius: 0; box-shadow: none;
+  height: clamp(220px, 45vw, 560px);
+}
+.full-bleed .entertainment-carousel .entertainment-slide{ height: 100%; }
+.full-bleed .entertainment-carousel .entertainment-slide img{
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+}
