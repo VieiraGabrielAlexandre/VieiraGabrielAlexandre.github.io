@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>Comics Inventory — Frontend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="./assets/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+                <h1>Comics Inventory</h1>
+                <div class="muted">Frontend HTML/CSS/JS</div>
+            </div>
+        </div>
+        <div class="toolbar">
+            <button class="btn" id="btn-config">⚙️ Configurar</button>
+            <button class="btn" id="btn-login">🔑 Obter Token</button>
+            <span class="pill" id="pill-status">Sem token</span>
+        </div>
+    </header>
+
+    <main class="grid">
+        <section class="card">
+            <h2>Itens</h2>
+
+            <div class="row">
+                <div class="field">
+                    <label for="filtro-nome">Filtro por nome</label>
+                    <input id="filtro-nome" placeholder="ex.: Bleach, Batman…" />
+                </div>
+                <div class="field">
+                    <label for="filtro-editora">Filtro por editora</label>
+                    <input id="filtro-editora" placeholder="ex.: Panini" />
+                </div>
+                <div class="field">
+                    <label for="filtro-tipo">Tipo</label>
+                    <select id="filtro-tipo">
+                        <option value="">Todos</option>
+                        <option value="hq">HQ</option>
+                        <option value="livro">Livro</option>
+                    </select>
+                </div>
+                <div class="field" style="align-self:flex-end">
+                    <button class="btn" id="btn-aplicar-filtros">Aplicar filtros</button>
+                </div>
+                <div class="right" style="align-self:flex-end">
+                    <button class="btn primary" id="btn-novo">+ Novo item</button>
+                </div>
+            </div>
+
+            <div class="stack" style="margin-top:12px">
+                <div class="card" style="padding:0">
+                    <div style="overflow:auto">
+                        <table id="tab-itens">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo</th>
+                                <th>Nome</th>
+                                <th>Vol</th>
+                                <th>Editora</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th style="width:160px">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pagination" id="paginacao">
+                    <button class="btn small" id="first">⏮️</button>
+                    <button class="btn small" id="prev">◀️</button>
+                    <span class="muted" id="page-info">página 1/1</span>
+                    <button class="btn small" id="next">▶️</button>
+                    <button class="btn small" id="last">⏭️</button>
+                    <span class="spacer"></span>
+                    <label class="muted">Por página</label>
+                    <select id="per-page" style="width:90px">
+                        <option>10</option>
+                        <option selected>15</option>
+                        <option>20</option>
+                        <option>50</option>
+                        <option>100</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <aside class="card">
+            <h2>Cadastro rápido</h2>
+            <div class="row">
+                <div class="field"><label>Tipo</label>
+                    <select id="tipo"><option value="hq" selected>HQ</option><option value="livro">Livro</option></select>
+                </div>
+                <div class="field"><label>Nome</label><input id="nome" placeholder="Título" /></div>
+                <div class="field"><label>Volume</label><input id="volume" placeholder="ex.: 1, 2, -" /></div>
+                <div class="field"><label>Editora</label><input id="editora" placeholder="Panini, JBC…" /></div>
+                <div class="field"><label>Valor</label><input id="valor" type="number" step="0.01" placeholder="0.00" /></div>
+                <div class="field"><label>Status</label>
+                    <select id="status">
+                        <option value="">—</option>
+                        <option value="na_estante">Na estante</option>
+                        <option value="vendido">Vendido</option>
+                        <option value="desejado">Desejado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px">
+                <button class="btn primary" id="btn-salvar">Salvar</button>
+                <button class="btn" id="btn-limpar">Limpar</button>
+                <span class="muted right" id="form-state">Novo item</span>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<!-- Modal edição -->
+<div class="modal-backdrop" id="modal">
+    <div class="modal">
+        <header><h3>Editar item</h3></header>
+        <div class="body">
+            <div class="row">
+                <div class="field"><label>Tipo</label><select id="m-tipo"><option value="hq">HQ</option><option value="livro">Livro</option></select></div>
+                <div class="field"><label>Nome</label><input id="m-nome" /></div>
+                <div class="field"><label>Volume</label><input id="m-volume" /></div>
+                <div class="field"><label>Editora</label><input id="m-editora" /></div>
+                <div class="field"><label>Valor</label><input id="m-valor" type="number" step="0.01" /></div>
+                <div class="field"><label>Status</label>
+                    <select id="m-status">
+                        <option value="">—</option>
+                        <option value="na_estante">Na estante</option>
+                        <option value="vendido">Vendido</option>
+                        <option value="desejado">Desejado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button class="btn" id="m-cancelar">Cancelar</button>
+            <button class="btn primary" id="m-salvar">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toasts -->
+<div class="toasts" id="toasts"></div>
+
+<!-- Scripts -->
+<script src="./assets/js/config.js"></script> <!-- ajuste API_BASE aqui -->
+<script src="./assets/js/ui.js"></script>
+<script src="./assets/js/api.js"></script>
+<script src="./assets/js/app.js"></script>
+</body>
+</html>
