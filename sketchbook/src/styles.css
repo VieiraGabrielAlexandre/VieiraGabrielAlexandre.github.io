@@ -1,0 +1,51 @@
+:root{
+    --bg:#0f1220; /* fundo escuro elegante */
+    --panel:#151933;
+    --panel-2:#0c1026;
+    --ink:#e5e7ff;
+    --muted:#99a1c2;
+    --accent:#7c9cff;
+    --accent-2:#6ef3fb;
+    --danger:#ff6b6b;
+    --ok:#64d38a;
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial; background:linear-gradient(180deg,#0b0e1a, var(--bg)); color:var(--ink)}
+.app{display:grid; grid-template-columns: 280px 1fr; grid-template-rows: 64px 1fr; gap:12px; height:100%; padding:12px}
+.topbar{grid-column:1/-1; display:flex; align-items:center; gap:10px; background:linear-gradient(180deg, #1b2043, #141a38); border:1px solid #222a55; padding:10px 12px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.3px}
+.brand .logo{width:28px; height:28px; border-radius:8px; background:conic-gradient(from 220deg, var(--accent), var(--accent-2)); box-shadow:0 0 0 2px #222a55}
+.kbd{font:600 11px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; background:#20264f; color:#c7d2ff; padding:3px 6px; border-radius:6px; border:1px solid #2b3370}
+.sep{width:1px; height:28px; background:#222a55; margin:0 4px}
+.toolbar{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+button, .seg > button{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; border:1px solid #243062; background:#18204a; color:var(--ink); cursor:pointer; transition:.2s transform,.2s background,.2s border}
+button:hover{transform:translateY(-1px); background:#1a2561}
+button:active{transform:translateY(0)}
+.seg{display:inline-flex; background:#12183a; border:1px solid #243062; border-radius:12px; padding:2px}
+.seg button{background:transparent; border:none; padding:8px 10px}
+.seg button.active{background:#22307a; border-radius:8px}
+.pill{padding:6px 10px; border-radius:999px; background:#1a2052; border:1px solid #29357a}
+.sidebar{background:linear-gradient(180deg, #141a33, #0e1330); border:1px solid #1f2757; border-radius:14px; padding:12px; overflow:auto; box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.sidebar h2{font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:#a9b2e8; margin:8px 0 6px}
+.level{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px; margin:6px 0; background:#10163a; border:1px solid #1b245b; border-radius:12px; cursor:pointer; transition:.2s}
+.level:hover{background:#161d49}
+.level.active{outline:2px solid #3b4fd6; background:#17205a}
+.level small{color:#8fa0d9}
+.prompt{font-size:13px; color:#c8d1ff; background:#0f1536; border:1px dashed #2a3473; border-radius:12px; padding:10px; margin-top:10px}
+.canvas-wrap{position:relative; background:#0b102a; border:1px solid #20285e; border-radius:14px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.35)}
+#paper, #guides, #notebook{position:absolute; inset:0}
+#paper{z-index:3}
+#guides{z-index:2; pointer-events:none}
+#notebook{z-index:1; pointer-events:none}
+.board{display:grid; grid-template-rows: 1fr auto; gap:10px; height:100%}
+.statusbar{display:flex; gap:12px; align-items:center; justify-content:space-between; padding:8px 10px; background:#13193e; border:1px solid #212a63; border-radius:12px}
+.statusbar .left, .statusbar .right{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+input[type="range"]{accent-color:var(--accent)}
+input[type="color"]{appearance:none; -webkit-appearance:none; width:36px; height:28px; border:none; border-radius:8px; background:transparent; box-shadow:0 0 0 2px #2a3470 inset}
+.hint{color:#9db0ff}
+.badge{background:#1a2052; padding:4px 8px; border-radius:8px; border:1px solid #2a347a; color:#cfe0ff; font-size:12px}
+.ghost{opacity:.35}
+.links{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap}
+a.link{color:#cfe0ff; text-decoration:none; border:1px solid #2a347a; border-radius:10px; padding:6px 10px}
+a.link:hover{background:#1a2052}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0}
